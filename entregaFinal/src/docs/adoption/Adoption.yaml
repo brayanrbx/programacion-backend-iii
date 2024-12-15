@@ -1,0 +1,86 @@
+paths:
+  /api/adoptions:
+    get:
+      summary: Obtiene todas las adopciones
+      tags:
+        - Adoptions
+      responses:
+        "200":
+          description: Lista de adopciones obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Adoption"
+        "500":
+          description: Error interno del servidor
+
+  /api/adoptions/{aid}:
+    get:
+      summary: Obtiene una adopción por su ID
+      tags:
+        - Adoptions
+      parameters:
+        - name: aid
+          in: path
+          required: true
+          description: ID de la adopción a buscar
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Adopción encontrada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Adoption"
+        "404":
+          description: Adopción no encontrada
+        "500":
+          description: Error interno del servidor
+
+  /api/adoptions/{uid}/{pid}:
+    post:
+      summary: Crea una nueva adopción
+      tags:
+        - Adoptions
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario que adopta
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID de la mascota adoptada
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Adopción creada correctamente
+        "404":
+          description: Usuario o mascota no encontrados
+        "500":
+          description: Error interno del servidor
+
+components:
+  schemas:
+    Adoption:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID único de la adopción
+        owner:
+          type: string
+          description: ID del usuario que adopta (referencia a usuarios)
+        pet:
+          type: string
+          description: ID de la mascota adoptada (referencia a mascotas)
+      example:
+        _id: "ObjectId(\"abcdef123456\")"
+        owner: "ObjectId(\"user789\")"
+        pet: "ObjectId(\"pet456\")"

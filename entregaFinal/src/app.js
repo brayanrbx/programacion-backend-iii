@@ -8,6 +8,9 @@ import adoptionsRouter from './routes/adoption.router.js';
 import sessionsRouter from './routes/sessions.router.js';
 import mocksRouter from './routes/mocks.router.js';
 
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from "swagger-ui-express";
+
 const app = express();
 const PORT = process.env.PORT||3000;
 const connection = mongoose.connect(`mongodb+srv://admin:admin01@cluster0.uxfb50k.mongodb.net/mockpets?retryWrites=true&w=majority`)
@@ -27,3 +30,18 @@ app.use((req, res, next) => {
 });
 
 app.listen(PORT, ()=> console.log(`Listening on ${PORT}`))
+
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.1",
+        info: {
+            title: "Documentación de la App Adoptame",
+            description: "App dedicada a encontrar familias para los perritos de la calle"
+        }
+    },
+    apis: ["./src/docs/**/*.yaml"]
+}
+
+const specs = swaggerJSDoc(swaggerOptions);
+
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
